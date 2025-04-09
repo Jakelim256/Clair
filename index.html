@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clair 서비스 구조</title>
+    <style>
+        :root {
+            --primary-color: #3a36e0;
+            --search-color: #2563eb;
+            --workspace-color: #16a34a;
+            --workspace-manage-color: #ca8a04;
+            --report-color: #dc2626;
+            --alert-color: #9333ea;
+            --import-color: #ea580c;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.5;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .badge-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px auto;
+            max-width: 800px;
+            background-color: white;
+            padding: 15px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge-sample {
+            display: inline-block;
+        }
+        
+        .badge-desc {
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        .filter-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .filter-button {
+            background-color: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+
+        .filter-button.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .ia-map {
+            position: relative;
+            margin-top: 60px;
+        }
+
+        .center-node {
+            position: relative;
+            width: 340px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            z-index: 10;
+        }
+
+        .modules-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .module {
+            width: 340px;
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .module:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .module-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+        }
+
+        .module-icon {
+            font-size: 1.8rem;
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .module-subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .module-content {
+            padding: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+
+        .feature-item.expandable {
+            cursor: pointer;
+            padding-right: 30px;
+        }
+
+        .feature-item.expandable::after {
+            content: "›";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item.expanded::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .sub-features {
+            display: none;
+            list-style: none;
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #e2e8f0;
+        }
+
+        .sub-feature {
+            padding: 8px 0;
+            color: #4b5563;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .search-color { background-color: var(--search-color); }
+        .workspace-color { background-color: var(--workspace-color); }
+        .workspace-manage-color { background-color: var(--workspace-manage-color); }
+        .report-color { background-color: var(--report-color); }
+        .alert-color { background-color: var(--alert-color); }
+        .import-color { background-color: var(--import-color); }
+
+        .key-features {
+            margin-top: 60px;
+            padding: 30px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .key-features h2 {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 1.75rem;
+            margin-bottom: 25px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .feature-card {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8fafc;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        footer {
+            margin-top: 60px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            .modules-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .module {
+                width: 100%;
+                max-width: 340px;
+            }
+        }
+        
+        .review-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background-color: #8b5cf6;
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+        }
+        
+        .dev-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Clair 서비스 구조</h1>
+            <p class="subtitle">블록체인 트랜잭션과 오프체인 온톨로지 데이터를 통합한 자금 추적 및 분석 솔루션</p>
+            
+            <div class="badge-info">
+                <div class="badge-item">
+                    <span class="review-badge">REVIEW</span>
+                    <span class="badge-desc">리뷰 버전에 포함된 기능</span>
+                </div>
+                <div class="badge-item">
+                    <span class="dev-badge"></span>
+                    <span class="badge-desc">고객 요구사항 수집 후 개발 예정</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="filter-controls">
+            <button class="filter-button active" data-version="review" onclick="switchVersion('review')">ver. Review</button>
+            <button class="filter-button" data-version="full" onclick="switchVersion('full')">ver. Full</button>
+        </div>
+
+        <div class="ia-map">
+            <div class="center-node">🏠 Home <span class="review-badge review-indicator">REVIEW</span></div>
+            <div class="modules-container">
+                <!-- 검색 모듈 -->
+                <div class="module" data-include="review full">
+                    <div class="module-header search-color">
+                        <div class="module-icon">🔍</div>
+                        <div>
+                            <div class="module-title">검색 <span class="review-badge review-indicator">REVIEW</span></div>
+                            <div class="module-subtitle">통합 데이터 검색 기능</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색 결과 <span class="review-badge review-indicator">REVIEW</span>
+                                <ul class="sub-features">
+                                    <li class="sub-feature">온체인/오프체인 통합 데이터 검색 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature">주소, 트랜잭션, 라벨, ENS 등 검색 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature">이더리움 우선 지원 <span class="review-badge review-indicator">REVIEW</span></li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색결과 목록 <span class="review-badge review-indicator">REVIEW</span>
+                                <ul class="sub-features">
+                                    <li class="sub-feature">카테고리별 검색 결과 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature">필터링 및 정렬 기능 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature">주소 및 트랜잭션 기반 그래프 생성 <span class="review-badge review-indicator">REVIEW</span></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 워크스페이스 모듈 -->
+                <div class="module" data-include="review full">
+                    <div class="module-header workspace-color">
+                        <div class="module-icon">📊</div>
+                        <div>
+                            <div class="module-title">Case <span class="review-badge review-indicator">REVIEW</span></div>
+                            <div class="module-subtitle">데이터 시각화 및 분석</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Workspace <span class="review-badge review-indicator">REVIEW</span>
+                                <ul class="sub-features">
+                                    <li class="sub-feature" data-include="review full">Trace Map: 시간순 자금 흐름 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="review full">Relation Graph: 관계성 분석 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="review full">Auto Trace: 자동화된 추적 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="full">Smart Focus: 필터, 추적 대상 강조하기 등</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">상세 패널 <span class="review-badge review-indicator">REVIEW</span>
+                                <ul class="sub-features">
+                                    <li class="sub-feature" data-include="review full">Node 패널: 주소 상세 정보 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="review full">Link 패널: 거래 상세 정보 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="review full">메모: 개인 메모 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="review full">Custom Tags: 고객이 입력한 커스텀 태그 <span class="review-badge review-indicator">REVIEW</span></li>
+                                    <li class="sub-feature" data-include="full">코멘트: 협업용 코멘트 <span class="dev-badge"></span></li>
+                                    <li class="sub-feature" data-include="full">Monitoring 설정: 주소별 모니터링 알림 설정</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">Case 저장 및 협업
+                                <ul class="sub-features">
+                                    <li class="sub-feature">탭 관리: 다중 워크스페이스</li>
+                                    <li class="sub-feature">복제, 저장, 내보내기</li>
+
+                                    <li class="sub-feature">Publish: 게시 및 공유 <span class="dev-badge"></span></li>
+                                    <li class="sub-feature">Fork: Case 복제 <span class="dev-badge"></span></li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">툴바 및 분석 편의
+                                <ul class="sub-features">
+                                    <li class="sub-feature">시각화 툴바: 그래프 조작</li>
+                                    <li class="sub-feature">Case 내 검색</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 워크스페이스 관리 모듈 -->
+                <div class="module" data-include="full">
+                    <div class="module-header workspace-manage-color">
+                        <div class="module-icon">📂</div>
+                        <div>
+                            <div class="module-title">Case 관리</div>
+                            <div class="module-subtitle">Case 목록 및 관리</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Case 목록
+                                <ul class="sub-features">
+                                    <li class="sub-feature">개인 생성한 Case 조회</li>
+                                    <li class="sub-feature">공유된 Case 조회 <span class="dev-badge"></span></li>
+                                    <li class="sub-feature">필터링 및 정렬 기능</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Report 관리 모듈 -->
+                <div class="module" data-include="full">
+                    <div class="module-header report-color">
+                        <div class="module-icon">📝</div>
+                        <div>
+                            <div class="module-title">권한 설정</div>
+                            <div class="module-subtitle">사용자 및 데이터 권한 관리</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">조직 관리
+                                <ul class="sub-features">
+                                    <li class="sub-feature">초대된 Project 목록 관리</li>
+                                    <li class="sub-feature">Project별 데이터 접근 권한 설정</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">기능 접근 관리
+                                <ul class="sub-features">
+                                    <li class="sub-feature">검색 기능 수행</li>
+                                    <li class="sub-feature">Workspace(그래프) 조작 기능 수행</li>
+                                    <li class="sub-feature">Auto Trace 기능 수행</li>
+                                    <li class="sub-feature">모니터링 설정</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 접근 관리
+                                <ul class="sub-features">
+                                    <li class="sub-feature">권한별 온체인 데이터 type별 허용</li>
+                                    <li class="sub-feature">권한별 온체인 데이터 기간별 허용</li>
+                                    <li class="sub-feature">권한별 오프체인 데이터 허용</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Alert 관리 모듈 -->
+                <div class="module" data-include="full">
+                    <div class="module-header alert-color">
+                        <div class="module-icon">🔔</div>
+                        <div>
+                            <div class="module-title">Monitoring 관리</div>
+                            <div class="module-subtitle">모니터링 및 알림 관리</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 목록
+                                <ul class="sub-features">
+                                    <li class="sub-feature">설정된 모니터링 목록 조회</li>
+                                    <li class="sub-feature">모니터링 상태 확인</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 생성하기
+                                <ul class="sub-features">
+                                    <li class="sub-feature">주소 모니터링 설정</li>
+                                    <li class="sub-feature">임계값 설정</li>
+                                    <li class="sub-feature">알림 조건 설정</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 관리
+                                <ul class="sub-features">
+                                    <li class="sub-feature">모니터링 수정 및 삭제</li>
+                                    <li class="sub-feature">모니터링 기록 확인</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Data Import 모듈 -->
+                <div class="module" data-include="full">
+                    <div class="module-header import-color">
+                        <div class="module-icon">📥</div>
+                        <div>
+                            <div class="module-title">Data Import</div>
+                            <div class="module-subtitle">외부 데이터 가져오기</div>
+                        </div>
+                    </div>
+                    <div class="module-content">
+                        <ul class="feature-list">
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 수동 업로드
+                                <ul class="sub-features">
+                                    <li class="sub-feature">고객사 오프체인 데이터 직접 업로드 (CSV/Excel 파일)</li>
+                                </ul>
+                            </li>
+                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 자동 업로드
+                                <ul class="sub-features">
+                                    <li class="sub-feature">API 연동</li>
+                                    <li class="sub-feature">온톨로지 변환 및 매핑</li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-features">
+            <h2>핵심 기능 요약</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>블록체인 데이터 통합 검색 <span class="review-badge review-indicator">REVIEW</span></h3>
+                    <p>다양한 블록체인 네트워크의 주소, 트랜잭션, 컨트랙트를 통합 검색하여 신속한 조사 시작점 제공</p>
+                </div>
+                <div class="feature-card">
+                    <h3>직관적인 자금 흐름 시각화 <span class="review-badge review-indicator">REVIEW</span></h3>
+                    <p>Trace Map을 통한 시간순 자금 흐름 추적과 Relation Graph를 통한 주소 간 관계성 분석 제공</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Auto Trace <span class="review-badge review-indicator">REVIEW</span></h3>
+                    <p>자동화된 트랜잭션 추적 기능으로 복잡한 자금 흐름을 신속하게 분석</p>
+                </div>
+                <div class="feature-card">
+                    <h3>상세 정보 패널 <span class="review-badge review-indicator">REVIEW</span></h3>
+                    <p>주소와 트랜잭션의 상세 정보를 즉시 확인하고 메모, 코멘트, 태그 등 조사 관련 정보 관리</p>
+                </div>
+                <div class="feature-card" data-include="full">
+                    <h3>오프체인 이종 데이터 연동</h3>
+                    <p>온톨로지 기반 오프체인 데이터의 연동 및 온체인 데이터와의 연결 관리</p>
+                </div>
+                <div class="feature-card" data-include="full">
+                    <h3>모니터링 및 알림</h3>
+                    <p>주요 주소 모니터링과 설정된 조건에 따른 알림 기능으로 지속적인 추적 및 감시 가능</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2025 Clair, Lambda256 - 블록체인 자금 추적 및 분석 솔루션</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleSubFeatures(element) {
+            element.classList.toggle('expanded');
+            var subFeatures = element.querySelector('.sub-features');
+            if (subFeatures.style.display === 'block') {
+                subFeatures.style.display = 'none';
+            } else {
+                subFeatures.style.display = 'block';
+            }
+        }
+        
+        function switchVersion(version) {
+            // 버튼 활성화 상태 변경
+            document.querySelectorAll('.filter-button').forEach(button => {
+                if (button.dataset.version === version) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            
+            // 모든 요소 순회하면서 해당 버전에 맞는 요소만 표시
+            document.querySelectorAll('[data-include]').forEach(element => {
+                if (element.dataset.include.includes(version)) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+            
+            // 하위 기능들 초기화
+            document.querySelectorAll('.sub-features').forEach(subFeature => {
+                subFeature.style.display = 'none';
+            });
+            
+            document.querySelectorAll('.expanded').forEach(expandedItem => {
+                expandedItem.classList.remove('expanded');
+            });
+            
+            // Review 뱃지 표시/숨김 처리
+            if (version === 'full') {
+                document.querySelectorAll('.review-indicator').forEach(badge => {
+                    badge.style.display = 'inline-block';
+                });
+            } else {
+                document.querySelectorAll('.review-indicator').forEach(badge => {
+                    badge.style.display = 'none';
+                });
+            }
+        }
+        
+        // 초기 로딩 시 Review 버전으로 시작
+        window.onload = function() {
+            switchVersion('review');
+        };
+    </script>
+</body>
+</html>
