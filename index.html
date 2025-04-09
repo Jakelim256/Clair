@@ -333,6 +333,161 @@
             vertical-align: middle;
         }
         
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 60px 0 30px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .data-intro {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .data-intro h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            text-align: center;
+        }
+        
+        /* 타임라인 스타일 - 수평 방향 */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px 0;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            height: 6px;
+            background-color: #e2e8f0;
+            top: 50%;
+            left: 0;
+            right: 0;
+            margin-top: -3px;
+            border-radius: 3px;
+            z-index: 1;
+        }
+        
+        .timeline-container {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .timeline-item {
+            position: relative;
+            width: 30%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 4px solid var(--primary-color);
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, 22px);
+            border-radius: 50%;
+            z-index: 3;
+            display: none;
+        }
+        
+        .timeline-content {
+            padding: 15px 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            margin-bottom: 45px;
+            height: 100%;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .timeline-date {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .timeline-features {
+            list-style: none;
+            padding: 0;
+            flex: 1;
+        }
+        
+        .timeline-features li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 6px;
+            color: #4b5563;
+        }
+        
+        .timeline-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--workspace-color);
+            font-weight: bold;
+        }
+        
+        .timeline-note {
+            margin-top: auto;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: #64748b;
+            padding-top: 10px;
+        }
+        
+        /* 모바일 반응형 */
+        @media screen and (max-width: 768px) {
+            .timeline-container {
+                flex-direction: column;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                margin-bottom: 30px;
+            }
+            
+            .timeline-item::after {
+                left: 50%;
+                top: 100%;
+                transform: translate(-50%, -10px);
+            }
+            
+            .timeline::after {
+                width: 6px;
+                height: 100%;
+                top: 0;
+                left: 50%;
+                margin-left: -3px;
+                margin-top: 0;
+            }
+            
+            .timeline-content {
+                margin-bottom: 20px;
+            }
+        }
+        
         .hidden {
             display: none !important;
         }
@@ -360,6 +515,8 @@
             <button class="filter-button active" data-version="review" onclick="switchVersion('review')">ver. Review</button>
             <button class="filter-button" data-version="full" onclick="switchVersion('full')">ver. Full</button>
         </div>
+
+        <div class="section-title">Clair Service Core</div>
 
         <div class="ia-map">
             <div class="center-node">🏠 Home <span class="review-badge review-indicator">REVIEW</span></div>
@@ -562,8 +719,109 @@
             </div>
         </div>
 
-        <div class="key-features">
-            <h2>핵심 기능 요약</h2>
+        <div class="section-title">Clair Data</div>
+        
+        <!-- 새로 추가한 데이터 소개 섹션 -->
+        <div class="data-intro" data-include="review full">
+            <h3>데이터 구축 타임라인</h3>
+            <div class="timeline">
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 4월 11일 (오늘)</div>
+                            <ul class="timeline-features">
+                                <li>Review 버전 - Mock-up data 활용</li>
+                            </ul>
+                            <div class="timeline-note">코어 기능 및 데이터 뷰어 기능 구현</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 4월 25일</div>
+                            <ul class="timeline-features">
+                                <li>Ethereum 체인 데이터 지원</li>
+                                <li>Bridge 데이터 구축</li>
+                                <li>Dex 데이터 구축</li>
+                                <li>Swap 데이터 구축</li>
+                            </ul>
+                            <div class="timeline-note">기본 온체인 데이터 및 가공 데이터 구축 완료</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 5월 30일</div>
+                            <ul class="timeline-features">
+                                <li>Bitcoin, Tron 체인 데이터 지원</li>
+                                <li>3rd party 데이터 통합</li>
+                                <li>온톨로지 이종 데이터 구축</li>
+                            </ul>
+                            <div class="timeline-note">멀티체인 지원 및 이종 데이터 통합 완료</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modules-container">
+            <!-- On Chain Data 모듈 -->
+            <div class="module" data-include="review full">
+                <div class="module-header search-color">
+                    <div class="module-icon">⛓️</div>
+                    <div>
+                        <div class="module-title">On Chain Data</div>
+                        <div class="module-subtitle">블록체인 데이터 및 가공 데이터</div>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="feature-list">
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Chain
+                            <ul class="sub-features">
+                                <li class="sub-feature">Ethereum</li>
+                                <li class="sub-feature" data-include="full">Bitcoin</li>
+                                <li class="sub-feature" data-include="full">Tron</li>
+                            </ul>
+                        </li>
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Indexed/Processed Data
+                            <ul class="sub-features">
+                                <li class="sub-feature">Bridge</li>
+                                <li class="sub-feature">Dex</li>
+                                <li class="sub-feature">Swap</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Off Chain Data 모듈 -->
+            <div class="module" data-include="full">
+                <div class="module-header workspace-color">
+                    <div class="module-icon">📊</div>
+                    <div>
+                        <div class="module-title">Off Chain Data</div>
+                        <div class="module-subtitle">외부 데이터 및 온톨로지 데이터</div>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="feature-list">
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">3rd party data
+                            <ul class="sub-features">
+                                <li class="sub-feature" data-include="full">Wallet risk score</li>
+                                <li class="sub-feature" data-include="full">Scam address data</li>
+                            </ul>
+                        </li>
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">Ontology data (이종데이터)
+                            <ul class="sub-features">
+                                <li class="sub-feature" data-include="full">Person 정보</li>
+                                <li class="sub-feature" data-include="full">Organization 정보</li>
+                                <li class="sub-feature" data-include="full">Bank account 정보</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">핵심 기능 요약</div>
             <div class="features-grid">
                 <div class="feature-card">
                     <h3>블록체인 데이터 통합 검색 <span class="review-badge review-indicator">REVIEW</span></h3>
