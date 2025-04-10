@@ -516,6 +516,108 @@
             <button class="filter-button" data-version="full" onclick="switchVersion('full')">ver. Full</button>
         </div>
 
+        <div class="section-title">Clair Data</div>
+        
+        <!-- 새로 추가한 데이터 소개 섹션 -->
+        <div class="data-intro" data-include="review full">
+            <h3>데이터 구축 타임라인</h3>
+            <div class="timeline">
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 4월 11일 (오늘)</div>
+                            <ul class="timeline-features">
+                                <li>Review 버전 - Mock-up data 활용</li>
+                            </ul>
+                            <div class="timeline-note">코어 기능 및 데이터 뷰어 기능 구현</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 4월 25일</div>
+                            <ul class="timeline-features">
+                                <li>Ethereum 체인 데이터 지원</li>
+                                <li>Bridge 데이터 구축</li>
+                                <li>Dex 데이터 구축</li>
+                                <li>Swap 데이터 구축</li>
+                            </ul>
+                            <div class="timeline-note">기본 온체인 데이터 및 가공 데이터 구축 완료</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2025년 5월 30일</div>
+                            <ul class="timeline-features">
+                                <li>Bitcoin, Tron 체인 데이터 지원</li>
+                                <li>3rd party 데이터 통합</li>
+                                <li>온톨로지 이종 데이터 구축</li>
+                            </ul>
+                            <div class="timeline-note">멀티체인 지원 및 이종 데이터 통합 완료</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modules-container">
+            <!-- On Chain Data 모듈 -->
+            <div class="module">
+                <div class="module-header search-color">
+                    <div class="module-icon">⛓️</div>
+                    <div>
+                        <div class="module-title">On Chain Data</div>
+                        <div class="module-subtitle">블록체인 데이터 및 가공 데이터</div>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="feature-list">
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Chain
+                            <ul class="sub-features">
+                                <li class="sub-feature">Ethereum</li>
+                                <li class="sub-feature" data-include="full">Bitcoin</li>
+                                <li class="sub-feature" data-include="full">Tron</li>
+                            </ul>
+                        </li>
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Indexed/Processed Data
+                            <ul class="sub-features">
+                                <li class="sub-feature">Bridge</li>
+                                <li class="sub-feature">Dex</li>
+                                <li class="sub-feature">Swap</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Off Chain Data 모듈 -->
+            <div class="module">
+                <div class="module-header workspace-color">
+                    <div class="module-icon">📊</div>
+                    <div>
+                        <div class="module-title">Off Chain Data</div>
+                        <div class="module-subtitle">외부 데이터 및 온톨로지 데이터</div>
+                    </div>
+                </div>
+                <div class="module-content">
+                    <ul class="feature-list">
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">3rd party data
+                            <ul class="sub-features">
+                                <li class="sub-feature">Wallet risk score</li>
+                                <li class="sub-feature">Scam address data</li>
+                            </ul>
+                        </li>
+                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Ontology data (이종데이터)
+                            <ul class="sub-features">
+                                <li class="sub-feature">Person 정보</li>
+                                <li class="sub-feature">Organization 정보</li>
+                                <li class="sub-feature">Bank account 정보</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="section-title">Clair Service Core</div>
 
         <div class="ia-map">
@@ -625,6 +727,7 @@
                                 <ul class="sub-features">
                                     <li class="sub-feature">권한별 온체인 데이터 type별 허용</li>
                                     <li class="sub-feature">권한별 온체인 데이터 기간별 허용</li>
+                                    <li class="sub-feature">권한별 온체인 데이터 3rd party 데이터별 허용</li>
                                     <li class="sub-feature">권한별 오프체인 데이터 허용</li>
                                 </ul>
                             </li>
@@ -691,108 +794,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">Clair Data</div>
-        
-        <!-- 새로 추가한 데이터 소개 섹션 -->
-        <div class="data-intro" data-include="review full">
-            <h3>데이터 구축 타임라인</h3>
-            <div class="timeline">
-                <div class="timeline-container">
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 4월 11일 (오늘)</div>
-                            <ul class="timeline-features">
-                                <li>Review 버전 - Mock-up data 활용</li>
-                            </ul>
-                            <div class="timeline-note">코어 기능 및 데이터 뷰어 기능 구현</div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 4월 25일</div>
-                            <ul class="timeline-features">
-                                <li>Ethereum 체인 데이터 지원</li>
-                                <li>Bridge 데이터 구축</li>
-                                <li>Dex 데이터 구축</li>
-                                <li>Swap 데이터 구축</li>
-                            </ul>
-                            <div class="timeline-note">기본 온체인 데이터 및 가공 데이터 구축 완료</div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 5월 30일</div>
-                            <ul class="timeline-features">
-                                <li>Bitcoin, Tron 체인 데이터 지원</li>
-                                <li>3rd party 데이터 통합</li>
-                                <li>온톨로지 이종 데이터 구축</li>
-                            </ul>
-                            <div class="timeline-note">멀티체인 지원 및 이종 데이터 통합 완료</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modules-container">
-            <!-- On Chain Data 모듈 -->
-            <div class="module">
-                <div class="module-header search-color">
-                    <div class="module-icon">⛓️</div>
-                    <div>
-                        <div class="module-title">On Chain Data</div>
-                        <div class="module-subtitle">블록체인 데이터 및 가공 데이터</div>
-                    </div>
-                </div>
-                <div class="module-content">
-                    <ul class="feature-list">
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Chain
-                            <ul class="sub-features">
-                                <li class="sub-feature">Ethereum</li>
-                                <li class="sub-feature" data-include="full">Bitcoin</li>
-                                <li class="sub-feature" data-include="full">Tron</li>
-                            </ul>
-                        </li>
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Indexed/Processed Data
-                            <ul class="sub-features">
-                                <li class="sub-feature">Bridge</li>
-                                <li class="sub-feature">Dex</li>
-                                <li class="sub-feature">Swap</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Off Chain Data 모듈 -->
-            <div class="module">
-                <div class="module-header workspace-color">
-                    <div class="module-icon">📊</div>
-                    <div>
-                        <div class="module-title">Off Chain Data</div>
-                        <div class="module-subtitle">외부 데이터 및 온톨로지 데이터</div>
-                    </div>
-                </div>
-                <div class="module-content">
-                    <ul class="feature-list">
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">3rd party data
-                            <ul class="sub-features">
-                                <li class="sub-feature">Wallet risk score</li>
-                                <li class="sub-feature">Scam address data</li>
-                            </ul>
-                        </li>
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Ontology data (이종데이터)
-                            <ul class="sub-features">
-                                <li class="sub-feature">Person 정보</li>
-                                <li class="sub-feature">Organization 정보</li>
-                                <li class="sub-feature">Bank account 정보</li>
-                            </ul>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>
