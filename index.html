@@ -13,6 +13,8 @@
             --report-color: #dc2626;
             --alert-color: #9333ea;
             --import-color: #ea580c;
+            --trace-color: #0891b2;
+            --panel-color: #6d28d9;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --radius: 12px;
         }
@@ -28,17 +30,22 @@
             background-color: #f8fafc;
             color: #1e293b;
             line-height: 1.5;
-            padding: 40px 20px;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
+            position: relative;
+            overflow: hidden;
         }
 
         header {
             text-align: center;
             margin-bottom: 40px;
+            padding-top: 40px;
         }
 
         h1 {
@@ -241,6 +248,8 @@
         .report-color { background-color: var(--report-color); }
         .alert-color { background-color: var(--alert-color); }
         .import-color { background-color: var(--import-color); }
+        .trace-color { background-color: var(--trace-color); }
+        .panel-color { background-color: var(--panel-color); }
 
         .key-features {
             margin-top: 60px;
@@ -286,6 +295,7 @@
             text-align: center;
             color: #64748b;
             font-size: 0.9rem;
+            padding-bottom: 40px;
         }
 
         .connections {
@@ -377,18 +387,21 @@
             margin-top: -3px;
             border-radius: 3px;
             z-index: 1;
+            display: none;
         }
         
         .timeline-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 40px;
             position: relative;
             z-index: 2;
         }
         
         .timeline-item {
             position: relative;
-            width: 30%;
+            width: 45%;
+            max-width: 450px;
             box-sizing: border-box;
         }
         
@@ -457,8 +470,115 @@
             padding-top: 10px;
         }
         
-        /* 모바일 반응형 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 슬라이드 관련 스타일 */
+        .slide-container {
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100vh;
+            width: 400%;
+        }
+
+        .slide {
+            width: 25%;
+            height: 100%;
+            padding: 0 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .slide-navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .slide-nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .slide-nav-dot.active {
+            background-color: var(--primary-color);
+        }
+
+        .slide-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .slide-arrow:hover {
+            background-color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .slide-arrow-left {
+            left: 20px;
+        }
+
+        .slide-arrow-right {
+            right: 20px;
+        }
+
+        /* 모바일 스타일 */
         @media screen and (max-width: 768px) {
+            .slide {
+                padding: 0 20px;
+                overflow-y: auto;
+            }
+            
+            .slide-arrow {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+
+            .slide-arrow-left {
+                left: 10px;
+            }
+
+            .slide-arrow-right {
+                right: 10px;
+            }
+            
             .timeline-container {
                 flex-direction: column;
             }
@@ -468,371 +588,400 @@
                 margin-bottom: 30px;
             }
             
-            .timeline-item::after {
-                left: 50%;
-                top: 100%;
-                transform: translate(-50%, -10px);
+            h1 {
+                font-size: 2rem;
             }
             
-            .timeline::after {
-                width: 6px;
-                height: 100%;
-                top: 0;
-                left: 50%;
-                margin-left: -3px;
-                margin-top: 0;
+            .subtitle {
+                font-size: 1rem;
             }
-            
-            .timeline-content {
-                margin-bottom: 20px;
-            }
-        }
-        
-        .hidden {
-            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Clair 서비스 구조</h1>
-            <p class="subtitle">블록체인 트랜잭션과 오프체인 온톨로지 데이터를 통합한 자금 추적 및 분석 솔루션</p>
+        <div class="slide-container">
+            <div class="slides">
+                <!-- 슬라이드 1: Clair 중간보고 Overview -->
+                <div class="slide" id="slide-1">
+                    <div class="slide-content">
+                        <header>
+                            <h1>Clair 서비스 구조</h1>
+                            <p class="subtitle">블록체인 트랜잭션과 오프체인 온톨로지 데이터를 통합한 자금 추적 및 분석 솔루션</p>
+                            
+                            <div class="badge-info">
+                                <div class="badge-item">
+                                    <span class="review-badge">REVIEW</span>
+                                    <span class="badge-desc">리뷰 버전에 포함된 기능</span>
+                                </div>
+                                <div class="badge-item">
+                                    <span class="dev-badge"></span>
+                                    <span class="badge-desc">고객 요구사항 수집 후 개발 예정</span>
+                                </div>
+                            </div>
+                        </header>
+                        
+                        <div class="section-title">Clair 중간보고 Overview</div>
+                        
+                        <div class="data-intro" data-include="review full">
+                            <ul class="feature-list">
+                                <li class="feature-item" style="background-color: #f0f4ff; font-weight: bold; border-radius: 6px; margin-bottom: 10px;">진행 순서</li>
+                                <li class="feature-item" style="padding-left: 30px;">시스템 어드민 정책 개요</li>
+                                <li class="feature-item" style="padding-left: 30px;">고객사 어드민 정책 개요</li>
+                                <li class="feature-item" style="padding-left: 30px;">Admin Console 리뷰</li>
+                                <li class="feature-item" style="padding-left: 30px;">서비스 코어 기능 개요</li>
+                                <li class="feature-item" style="padding-left: 30px;">Service FE 리뷰</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 슬라이드 2: Clair Data -->
+                <div class="slide" id="slide-2">
+                    <div class="slide-content">
+                        <div class="section-title">Clair Data</div>
+                        
+                        <div class="data-intro" data-include="review full">
+                            <h3>데이터 구축 타임라인</h3>
+                            <div class="timeline">
+                                <div class="timeline-container">
+                                    <div class="timeline-item">
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">2025년 4월 11일 (오늘)</div>
+                                            <ul class="timeline-features">
+                                                <li>Review 버전 - Mock-up data 활용</li>
+                                            </ul>
+                                            <div class="timeline-note">코어 기능 및 데이터 뷰어 기능 구현</div>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-content">
+                                            <div class="timeline-date">2025년 4월 25일</div>
+                                            <ul class="timeline-features">
+                                                <li>Ethereum 체인 데이터 지원</li>
+                                                <li>Bridge 데이터 구축</li>
+                                                <li>Dex 데이터 구축</li>
+                                                <li>Swap 데이터 구축</li>
+                                            </ul>
+                                            <div class="timeline-note">기본 온체인 데이터 및 가공 데이터 구축 완료</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="modules-container">
+                            <!-- On Chain Data 모듈 -->
+                            <div class="module">
+                                <div class="module-header search-color">
+                                    <div class="module-icon">⛓️</div>
+                                    <div>
+                                        <div class="module-title">On Chain Data</div>
+                                        <div class="module-subtitle">블록체인 데이터 및 가공 데이터</div>
+                                    </div>
+                                </div>
+                                <div class="module-content">
+                                    <ul class="feature-list">
+                                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Chain
+                                            <ul class="sub-features">
+                                                <li class="sub-feature">Ethereum</li>
+                                                <li class="sub-feature" data-include="full">Bitcoin</li>
+                                                <li class="sub-feature" data-include="full">Tron</li>
+                                            </ul>
+                                        </li>
+                                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Indexed/Processed Data
+                                            <ul class="sub-features">
+                                                <li class="sub-feature">Bridge</li>
+                                                <li class="sub-feature">Dex</li>
+                                                <li class="sub-feature">Swap</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Off Chain Data 모듈 -->
+                            <div class="module">
+                                <div class="module-header workspace-color">
+                                    <div class="module-icon">📊</div>
+                                    <div>
+                                        <div class="module-title">Off Chain Data</div>
+                                        <div class="module-subtitle">외부 데이터 및 온톨로지 데이터</div>
+                                    </div>
+                                </div>
+                                <div class="module-content">
+                                    <ul class="feature-list">
+                                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">3rd party data
+                                            <ul class="sub-features">
+                                                <li class="sub-feature">Wallet risk score</li>
+                                                <li class="sub-feature">Scam address data</li>
+                                            </ul>
+                                        </li>
+                                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Ontology data (이종데이터)
+                                            <ul class="sub-features">
+                                                <li class="sub-feature">Person 정보</li>
+                                                <li class="sub-feature">Organization 정보</li>
+                                                <li class="sub-feature">Bank account 정보</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 슬라이드 3: Clair Service Core -->
+                <div class="slide" id="slide-3">
+                    <div class="slide-content">
+                        <div class="section-title">Clair Service Core</div>
+                        
+                        <div class="filter-controls">
+                            <button class="filter-button active" data-version="review" onclick="switchVersion('review')">ver. Review</button>
+                            <button class="filter-button" data-version="full" onclick="switchVersion('full')">ver. Full</button>
+                        </div>
+
+                        <div class="ia-map">
+                            <div class="center-node">🏠 Home <span class="review-badge review-indicator">REVIEW</span></div>
+                            <div class="modules-container">
+                                <!-- 검색 모듈 -->
+                                <div class="module" data-include="review full">
+                                    <div class="module-header search-color">
+                                        <div class="module-icon">🔍</div>
+                                        <div>
+                                            <div class="module-title">검색 <span class="review-badge review-indicator">REVIEW</span></div>
+                                            <div class="module-subtitle">통합 데이터 검색 기능</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색 결과 <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">온체인/오프체인 통합 데이터 검색 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature">주소, 트랜잭션, 라벨, ENS 등 검색 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature">이더리움 우선 지원</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색결과 목록 <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">카테고리별 검색 결과 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature">필터링 및 정렬 기능 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature">주소 및 트랜잭션 기반 그래프 생성 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- 워크스페이스 모듈 -->
+                                <div class="module" data-include="review full">
+                                    <div class="module-header workspace-color">
+                                        <div class="module-icon">📊</div>
+                                        <div>
+                                            <div class="module-title">Case <span class="review-badge review-indicator">REVIEW</span></div>
+                                            <div class="module-subtitle">데이터 시각화 및 분석</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Workspace <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature" data-include="review full">Trace Map: 시간순 자금 흐름 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">Relation Graph: 관계성 분석</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">툴바 및 분석 편의
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">시각화 툴바: 그래프 조작</li>
+                                                    <li class="sub-feature">Case 내 검색</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">Case 목록
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">개인 생성한 Case 조회</li>
+                                                    <li class="sub-feature">공유된 Case 조회 <span class="dev-badge"></span></li>
+                                                    <li class="sub-feature">필터링 및 정렬 기능</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- 심층 Trace 기능 모듈 -->
+                                <div class="module" data-include="review full">
+                                    <div class="module-header trace-color">
+                                        <div class="module-icon">🔍</div>
+                                        <div>
+                                            <div class="module-title">심층 Trace 기능 <span class="review-badge review-indicator">REVIEW</span></div>
+                                            <div class="module-subtitle">추적 및 분석을 위한 고도화 기능</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Auto Trace <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature" data-include="review full">FIFO 기반 자동 추적 기능 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">사용자가 선택 가능한 다양한 추적 방법론</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Smart Focus
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature" data-include="review full">그래프 필터</li>
+                                                    <li class="sub-feature" data-include="review full">추적 대상 강조하기 (거래소, Bridge, Defi 등)</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <!-- 상세패널 기능 모듈 -->
+                                <div class="module" data-include="review full">
+                                    <div class="module-header panel-color">
+                                        <div class="module-icon">📝</div>
+                                        <div>
+                                            <div class="module-title">상세정보 사이드패널 <span class="review-badge review-indicator">REVIEW</span></div>
+                                            <div class="module-subtitle">주소 및 트랜잭션 상세 정보 열람</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">온체인 데이터 <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature" data-include="review full">주소 집계 데이터 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">차트 데이터 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">트랜잭션 In/Out 데이터 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">오프체인 데이터 <span class="review-badge review-indicator">REVIEW</span>
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature" data-include="review full">주소, 트랜잭션별 메모 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">사용자 입력 커스텀 태그 데이터 <span class="review-badge review-indicator">REVIEW</span></li>
+                                                    <li class="sub-feature" data-include="review full">주소, 트랜잭션별 코멘트 <span class="dev-badge"></span></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Alert 관리 모듈 -->
+                                <div class="module" data-include="full">
+                                    <div class="module-header alert-color">
+                                        <div class="module-icon">🔔</div>
+                                        <div>
+                                            <div class="module-title">Monitoring 관리</div>
+                                            <div class="module-subtitle">모니터링 및 알림 관리</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 생성하기
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">주소 모니터링 설정</li>
+                                                    <li class="sub-feature">임계값 설정</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 목록
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">설정된 모니터링 목록 조회</li>
+                                                    <li class="sub-feature">모니터링 상태 확인</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 관리
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">모니터링 수정 및 삭제</li>
+                                                    <li class="sub-feature">모니터링 기록 확인</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- Data Import 모듈 -->
+                                <div class="module" data-include="full">
+                                    <div class="module-header import-color">
+                                        <div class="module-icon">📥</div>
+                                        <div>
+                                            <div class="module-title">Data Import</div>
+                                            <div class="module-subtitle">외부 데이터 가져오기</div>
+                                        </div>
+                                    </div>
+                                    <div class="module-content">
+                                        <ul class="feature-list">
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 수동 업로드
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">고객사 오프체인 데이터 직접 업로드 (CSV/Excel 파일)</li>
+                                                </ul>
+                                            </li>
+                                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 자동 업로드
+                                                <ul class="sub-features">
+                                                    <li class="sub-feature">API 연동</li>
+                                                    <li class="sub-feature">온톨로지 변환 및 매핑</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 슬라이드 4: 핵심 기능 요약 -->
+                <div class="slide" id="slide-4">
+                    <div class="slide-content">
+                        <div class="section-title">핵심 기능 요약</div>
+                        <div class="features-grid">
+                            <div class="feature-card">
+                                <h3>블록체인 데이터 통합 검색 <span class="review-badge review-indicator">REVIEW</span></h3>
+                                <p>다양한 블록체인 네트워크의 주소, 트랜잭션, 컨트랙트를 통합 검색하여 신속한 조사 시작점 제공</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>직관적인 자금 흐름 시각화 <span class="review-badge review-indicator">REVIEW</span></h3>
+                                <p>Trace Map을 통한 시간순 자금 흐름 추적과 Relation Graph를 통한 주소 간 관계성 분석 제공</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>Auto Trace <span class="review-badge review-indicator">REVIEW</span></h3>
+                                <p>자동화된 트랜잭션 추적 기능으로 복잡한 자금 흐름을 신속하게 분석</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3>상세 정보 패널 <span class="review-badge review-indicator">REVIEW</span></h3>
+                                <p>주소와 트랜잭션의 상세 정보를 즉시 확인하고 메모, 코멘트, 태그 등 조사 관련 정보 관리</p>
+                            </div>
+                            <div class="feature-card" data-include="full">
+                                <h3>오프체인 이종 데이터 연동</h3>
+                                <p>온톨로지 기반 오프체인 데이터의 연동 및 온체인 데이터와의 연결 관리</p>
+                            </div>
+                            <div class="feature-card" data-include="full">
+                                <h3>모니터링 및 알림</h3>
+                                <p>주요 주소 모니터링과 설정된 조건에 따른 알림 기능으로 지속적인 추적 및 감시 가능</p>
+                            </div>
+                        </div>
+                        
+                        <footer>
+                            <p>© 2025 Clair, Lambda256 - 블록체인 자금 추적 및 분석 솔루션</p>
+                        </footer>
+                    </div>
+                </div>
+            </div>
             
-            <div class="badge-info">
-                <div class="badge-item">
-                    <span class="review-badge">REVIEW</span>
-                    <span class="badge-desc">리뷰 버전에 포함된 기능</span>
-                </div>
-                <div class="badge-item">
-                    <span class="dev-badge"></span>
-                    <span class="badge-desc">고객 요구사항 수집 후 개발 예정</span>
-                </div>
-            </div>
-        </header>
-        
-        <div class="filter-controls">
-            <button class="filter-button active" data-version="review" onclick="switchVersion('review')">ver. Review</button>
-            <button class="filter-button" data-version="full" onclick="switchVersion('full')">ver. Full</button>
-        </div>
-
-        <div class="section-title">Clair Data</div>
-        
-        <!-- 새로 추가한 데이터 소개 섹션 -->
-        <div class="data-intro" data-include="review full">
-            <h3>데이터 구축 타임라인</h3>
-            <div class="timeline">
-                <div class="timeline-container">
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 4월 11일 (오늘)</div>
-                            <ul class="timeline-features">
-                                <li>Review 버전 - Mock-up data 활용</li>
-                            </ul>
-                            <div class="timeline-note">코어 기능 및 데이터 뷰어 기능 구현</div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 4월 25일</div>
-                            <ul class="timeline-features">
-                                <li>Ethereum 체인 데이터 지원</li>
-                                <li>Bridge 데이터 구축</li>
-                                <li>Dex 데이터 구축</li>
-                                <li>Swap 데이터 구축</li>
-                            </ul>
-                            <div class="timeline-note">기본 온체인 데이터 및 가공 데이터 구축 완료</div>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="timeline-date">2025년 5월 30일</div>
-                            <ul class="timeline-features">
-                                <li>Bitcoin, Tron 체인 데이터 지원</li>
-                                <li>3rd party 데이터 통합</li>
-                                <li>온톨로지 이종 데이터 구축</li>
-                            </ul>
-                            <div class="timeline-note">멀티체인 지원 및 이종 데이터 통합 완료</div>
-                        </div>
-                    </div>
-                </div>
+            <!-- 슬라이드 화살표 네비게이션 -->
+            <div class="slide-arrow slide-arrow-left" onclick="navigateSlide(-1)">&#10094;</div>
+            <div class="slide-arrow slide-arrow-right" onclick="navigateSlide(1)">&#10095;</div>
+            
+            <!-- 하단 도트 네비게이션 -->
+            <div class="slide-navigation">
+                <div class="slide-nav-dot active" onclick="goToSlide(0)"></div>
+                <div class="slide-nav-dot" onclick="goToSlide(1)"></div>
+                <div class="slide-nav-dot" onclick="goToSlide(2)"></div>
+                <div class="slide-nav-dot" onclick="goToSlide(3)"></div>
             </div>
         </div>
-        
-        <div class="modules-container">
-            <!-- On Chain Data 모듈 -->
-            <div class="module">
-                <div class="module-header search-color">
-                    <div class="module-icon">⛓️</div>
-                    <div>
-                        <div class="module-title">On Chain Data</div>
-                        <div class="module-subtitle">블록체인 데이터 및 가공 데이터</div>
-                    </div>
-                </div>
-                <div class="module-content">
-                    <ul class="feature-list">
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Chain
-                            <ul class="sub-features">
-                                <li class="sub-feature">Ethereum</li>
-                                <li class="sub-feature" data-include="full">Bitcoin</li>
-                                <li class="sub-feature" data-include="full">Tron</li>
-                            </ul>
-                        </li>
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Indexed/Processed Data
-                            <ul class="sub-features">
-                                <li class="sub-feature">Bridge</li>
-                                <li class="sub-feature">Dex</li>
-                                <li class="sub-feature">Swap</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Off Chain Data 모듈 -->
-            <div class="module">
-                <div class="module-header workspace-color">
-                    <div class="module-icon">📊</div>
-                    <div>
-                        <div class="module-title">Off Chain Data</div>
-                        <div class="module-subtitle">외부 데이터 및 온톨로지 데이터</div>
-                    </div>
-                </div>
-                <div class="module-content">
-                    <ul class="feature-list">
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">3rd party data
-                            <ul class="sub-features">
-                                <li class="sub-feature">Wallet risk score</li>
-                                <li class="sub-feature">Scam address data</li>
-                            </ul>
-                        </li>
-                        <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Ontology data (이종데이터)
-                            <ul class="sub-features">
-                                <li class="sub-feature">Person 정보</li>
-                                <li class="sub-feature">Organization 정보</li>
-                                <li class="sub-feature">Bank account 정보</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">Clair Service Core</div>
-
-        <div class="ia-map">
-            <div class="center-node">🏠 Home <span class="review-badge review-indicator">REVIEW</span></div>
-            <div class="modules-container">
-                <!-- 검색 모듈 -->
-                <div class="module" data-include="review full">
-                    <div class="module-header search-color">
-                        <div class="module-icon">🔍</div>
-                        <div>
-                            <div class="module-title">검색 <span class="review-badge review-indicator">REVIEW</span></div>
-                            <div class="module-subtitle">통합 데이터 검색 기능</div>
-                        </div>
-                    </div>
-                    <div class="module-content">
-                        <ul class="feature-list">
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색 결과 <span class="review-badge review-indicator">REVIEW</span>
-                                <ul class="sub-features">
-                                    <li class="sub-feature">온체인/오프체인 통합 데이터 검색 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature">주소, 트랜잭션, 라벨, ENS 등 검색 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature">이더리움 우선 지원 <span class="review-badge review-indicator">REVIEW</span></li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">검색결과 목록 <span class="review-badge review-indicator">REVIEW</span>
-                                <ul class="sub-features">
-                                    <li class="sub-feature">카테고리별 검색 결과 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature">필터링 및 정렬 기능 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature">주소 및 트랜잭션 기반 그래프 생성 <span class="review-badge review-indicator">REVIEW</span></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- 워크스페이스 모듈 -->
-                <div class="module" data-include="review full">
-                    <div class="module-header workspace-color">
-                        <div class="module-icon">📊</div>
-                        <div>
-                            <div class="module-title">Case <span class="review-badge review-indicator">REVIEW</span></div>
-                            <div class="module-subtitle">데이터 시각화 및 분석</div>
-                        </div>
-                    </div>
-                    <div class="module-content">
-                        <ul class="feature-list">
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">Workspace <span class="review-badge review-indicator">REVIEW</span>
-                                <ul class="sub-features">
-                                    <li class="sub-feature" data-include="review full">Trace Map: 시간순 자금 흐름 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="review full">Relation Graph: 관계성 분석 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="review full">Auto Trace: 자동화된 추적 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="full">Smart Focus: 필터, 추적 대상 강조하기 등</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="review full">상세 패널 <span class="review-badge review-indicator">REVIEW</span>
-                                <ul class="sub-features">
-                                    <li class="sub-feature" data-include="review full">Node 패널: 주소 상세 정보 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="review full">Link 패널: 거래 상세 정보 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="review full">메모: 개인 메모 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="review full">Custom Tags: 고객이 입력한 커스텀 태그 <span class="review-badge review-indicator">REVIEW</span></li>
-                                    <li class="sub-feature" data-include="full">코멘트: 협업용 코멘트 <span class="dev-badge"></span></li>
-                                    <li class="sub-feature" data-include="full">Monitoring 설정: 주소별 모니터링 알림 설정</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">툴바 및 분석 편의
-                                <ul class="sub-features">
-                                    <li class="sub-feature">시각화 툴바: 그래프 조작</li>
-                                    <li class="sub-feature">Case 내 검색</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)" data-include="full">Case 목록
-                                <ul class="sub-features">
-                                    <li class="sub-feature">개인 생성한 Case 조회</li>
-                                    <li class="sub-feature">공유된 Case 조회 <span class="dev-badge"></span></li>
-                                    <li class="sub-feature">필터링 및 정렬 기능</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Report 관리 모듈 -->
-                <div class="module" data-include="full">
-                    <div class="module-header report-color">
-                        <div class="module-icon">📝</div>
-                        <div>
-                            <div class="module-title">권한 설정</div>
-                            <div class="module-subtitle">사용자 및 데이터 권한 관리</div>
-                        </div>
-                    </div>
-                    <div class="module-content">
-                        <ul class="feature-list">
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">조직 관리
-                                <ul class="sub-features">
-                                    <li class="sub-feature">초대된 Project 목록 관리</li>
-                                    <li class="sub-feature">Project별 데이터 접근 권한 설정</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">기능 접근 관리
-                                <ul class="sub-features">
-                                    <li class="sub-feature">검색 기능 수행</li>
-                                    <li class="sub-feature">Workspace(그래프) 조작 기능 수행</li>
-                                    <li class="sub-feature">Auto Trace 기능 수행</li>
-                                    <li class="sub-feature">모니터링 설정</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 접근 관리
-                                <ul class="sub-features">
-                                    <li class="sub-feature">권한별 온체인 데이터 type별 허용</li>
-                                    <li class="sub-feature">권한별 온체인 데이터 기간별 허용</li>
-                                    <li class="sub-feature">권한별 온체인 데이터 3rd party 데이터별 허용</li>
-                                    <li class="sub-feature">권한별 오프체인 데이터 허용</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Alert 관리 모듈 -->
-                <div class="module" data-include="full">
-                    <div class="module-header alert-color">
-                        <div class="module-icon">🔔</div>
-                        <div>
-                            <div class="module-title">Monitoring 관리</div>
-                            <div class="module-subtitle">모니터링 및 알림 관리</div>
-                        </div>
-                    </div>
-                    <div class="module-content">
-                        <ul class="feature-list">
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 목록
-                                <ul class="sub-features">
-                                    <li class="sub-feature">설정된 모니터링 목록 조회</li>
-                                    <li class="sub-feature">모니터링 상태 확인</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 생성하기
-                                <ul class="sub-features">
-                                    <li class="sub-feature">주소 모니터링 설정</li>
-                                    <li class="sub-feature">임계값 설정</li>
-                                    <li class="sub-feature">알림 조건 설정</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">Monitoring 관리
-                                <ul class="sub-features">
-                                    <li class="sub-feature">모니터링 수정 및 삭제</li>
-                                    <li class="sub-feature">모니터링 기록 확인</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Data Import 모듈 -->
-                <div class="module" data-include="full">
-                    <div class="module-header import-color">
-                        <div class="module-icon">📥</div>
-                        <div>
-                            <div class="module-title">Data Import</div>
-                            <div class="module-subtitle">외부 데이터 가져오기</div>
-                        </div>
-                    </div>
-                    <div class="module-content">
-                        <ul class="feature-list">
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 수동 업로드
-                                <ul class="sub-features">
-                                    <li class="sub-feature">고객사 오프체인 데이터 직접 업로드 (CSV/Excel 파일)</li>
-                                </ul>
-                            </li>
-                            <li class="feature-item expandable" onclick="toggleSubFeatures(this)">데이터 자동 업로드
-                                <ul class="sub-features">
-                                    <li class="sub-feature">API 연동</li>
-                                    <li class="sub-feature">온톨로지 변환 및 매핑</li>
-
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-title">핵심 기능 요약</div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>블록체인 데이터 통합 검색 <span class="review-badge review-indicator">REVIEW</span></h3>
-                    <p>다양한 블록체인 네트워크의 주소, 트랜잭션, 컨트랙트를 통합 검색하여 신속한 조사 시작점 제공</p>
-                </div>
-                <div class="feature-card">
-                    <h3>직관적인 자금 흐름 시각화 <span class="review-badge review-indicator">REVIEW</span></h3>
-                    <p>Trace Map을 통한 시간순 자금 흐름 추적과 Relation Graph를 통한 주소 간 관계성 분석 제공</p>
-                </div>
-                <div class="feature-card">
-                    <h3>Auto Trace <span class="review-badge review-indicator">REVIEW</span></h3>
-                    <p>자동화된 트랜잭션 추적 기능으로 복잡한 자금 흐름을 신속하게 분석</p>
-                </div>
-                <div class="feature-card">
-                    <h3>상세 정보 패널 <span class="review-badge review-indicator">REVIEW</span></h3>
-                    <p>주소와 트랜잭션의 상세 정보를 즉시 확인하고 메모, 코멘트, 태그 등 조사 관련 정보 관리</p>
-                </div>
-                <div class="feature-card" data-include="full">
-                    <h3>오프체인 이종 데이터 연동</h3>
-                    <p>온톨로지 기반 오프체인 데이터의 연동 및 온체인 데이터와의 연결 관리</p>
-                </div>
-                <div class="feature-card" data-include="full">
-                    <h3>모니터링 및 알림</h3>
-                    <p>주요 주소 모니터링과 설정된 조건에 따른 알림 기능으로 지속적인 추적 및 감시 가능</p>
-                </div>
-            </div>
-        </div>
-
-        <footer>
-            <p>© 2025 Clair, Lambda256 - 블록체인 자금 추적 및 분석 솔루션</p>
-        </footer>
     </div>
 
     <script>
+        let currentSlide = 0;
+        const totalSlides = 4;
+        
         function toggleSubFeatures(element) {
             element.classList.toggle('expanded');
             var subFeatures = element.querySelector('.sub-features');
@@ -883,9 +1032,71 @@
             }
         }
         
+        // 슬라이드 이동 함수
+        function updateSlidePosition() {
+            const slidesElement = document.querySelector('.slides');
+            slidesElement.style.transform = `translateX(-${currentSlide * 25}%)`;
+            
+            // 도트 네비게이션 업데이트
+            document.querySelectorAll('.slide-nav-dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            // 화살표 표시/숨김 처리
+            document.querySelector('.slide-arrow-left').style.visibility = currentSlide === 0 ? 'hidden' : 'visible';
+            document.querySelector('.slide-arrow-right').style.visibility = currentSlide === totalSlides - 1 ? 'hidden' : 'visible';
+        }
+        
+        function navigateSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlidePosition();
+            }
+        }
+        
+        function goToSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < totalSlides) {
+                currentSlide = slideIndex;
+                updateSlidePosition();
+            }
+        }
+        
+        // 키보드 이벤트 리스너 추가
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                navigateSlide(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateSlide(1);
+            }
+        });
+        
+        // 터치 이벤트 처리
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                navigateSlide(1); // 왼쪽으로 스와이프 - 다음 슬라이드로
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                navigateSlide(-1); // 오른쪽으로 스와이프 - 이전 슬라이드로
+            }
+        }
+        
         // 초기 로딩 시 Full 버전으로 시작
         window.onload = function() {
             switchVersion('full');
+            updateSlidePosition();
         };
     </script>
 </body>
